@@ -1,0 +1,146 @@
+{
+  "info": {
+    "name": "Student API - Global Exception Handling",
+    "_postman_id": "f85d2304-e31c-44aa-b2ff-3f43f8f945f3",
+    "description": "Collection to test valid and invalid student inputs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Student - Valid ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/student/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student", "1"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Student payload has expected fields', function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body).to.have.property('id');",
+              "  pm.expect(body).to.have.property('name');",
+              "  pm.expect(body).to.have.property('department');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Student - Not Found ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/student/999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student", "999"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 404', function () {",
+              "  pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test('Error response is structured', function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body).to.have.property('timestamp');",
+              "  pm.expect(body).to.have.property('message');",
+              "  pm.expect(body).to.have.property('statusCode', 404);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Student - Invalid Numeric Input",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/student/-5",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student", "-5"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Invalid input response is structured', function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body).to.have.property('timestamp');",
+              "  pm.expect(body).to.have.property('message');",
+              "  pm.expect(body).to.have.property('statusCode', 400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Student - Invalid Text Format",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/student/abc",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student", "abc"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Text input format response is structured', function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body).to.have.property('timestamp');",
+              "  pm.expect(body).to.have.property('message');",
+              "  pm.expect(body).to.have.property('statusCode', 400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
